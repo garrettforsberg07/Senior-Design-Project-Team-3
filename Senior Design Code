@@ -1,0 +1,45 @@
+// Initialize Pins
+int GOLED = 5; // the green LED pin is connected to the nano at pin 5
+int NOLED = 6; // the red LED pin is connected to to the nano at pin 6
+bool dispensed = false;
+int Pumpswitch = 7; // pump is connected to the nano at pin 7
+const int analogPin = A0; // the analog pin (if the IR sense is detecting) is connected to the nano at 0
+int startval =0;
+
+// Initialize Variables
+int val = 0; // initializing the variable val to represent if the pump is dispensend
+
+
+void setup(){
+    //Use AREF for refrence voltage (plugged the AREF to the 5V power supply)
+    //analogReference(EXTERNAL); 
+
+    // Setting Inputs and Outputs 
+    pinMode (GOLED, OUTPUT); // initializing the green pin as an output
+    pinMode (NOLED, OUTPUT); // initializing the red pin as an output
+    pinMode(Pumpswitch, OUTPUT); // initializing the pump as an output
+    //pinMode (IRsense, INPUT); // initializing the sensor  as an input
+    pinMode(analogPin, INPUT); // initializing the IR sensor pin as an input
+
+    // Set up serial connection
+    Serial.begin(9600); // allowing the computer to talk to the arduino
+
+    digitalWrite(NOLED, HIGH);
+    startval = analogRead(analogPin);
+}
+
+void loop() {
+    
+    val = analogRead(analogPin); // reads the input of the IR sensor
+    
+    if (val > 30) {
+        dispensed = true;
+        digitalWrite(GOLED, HIGH);
+        digitalWrite(NOLED, LOW);
+        digitalWrite(Pumpswitch, HIGH);
+        delay(500);
+        digitalWrite (Pumpswitch, LOW);
+        delay(1000);
+        Serial.println("Thank you!");
+    }
+}
